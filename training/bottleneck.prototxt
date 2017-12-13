@@ -1,0 +1,156 @@
+layer {
+	bottom: "concat2345"
+	top: "bottleneck_branch2a"
+	name: "bottleneck_branch2a"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 1
+		pad: 0
+		stride: 1
+		bias_term: false
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2a"
+	top: "bottleneck_branch2a"
+	name: "bn1a_branch2a"
+	type: "BatchNorm"
+	batch_norm_param {
+		use_global_stats: true
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2a"
+	top: "bottleneck_branch2a"
+	name: "scale1a_branch2a"
+	type: "Scale"
+	scale_param {
+		bias_term: true
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2a"
+	top: "bottleneck_branch2a"
+	name: "bottleneck_branch2a_relu"
+	type: "ReLU"
+}
+
+layer {
+	bottom: "bottleneck_branch2a"
+	top: "bottleneck_branch2b"
+	name: "bottleneck_branch2b"
+	type: "Convolution"
+	convolution_param {
+		num_output: 64
+		kernel_size: 3
+		pad: 1
+		stride: 1
+		bias_term: false
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2b"
+	top: "bottleneck_branch2b"
+	name: "bn1a_branch2b"
+	type: "BatchNorm"
+	batch_norm_param {
+		use_global_stats: true
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2b"
+	top: "bottleneck_branch2b"
+	name: "scale1a_branch2b"
+	type: "Scale"
+	scale_param {
+		bias_term: true
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2b"
+	top: "bottleneck_branch2b"
+	name: "bottleneck_branch2b_relu"
+	type: "ReLU"
+}
+
+layer {
+	bottom: "bottleneck_branch2b"
+	top: "bottleneck_branch2c"
+	name: "bottleneck_branch2c"
+	type: "Convolution"
+	convolution_param {
+		num_output: 256
+		kernel_size: 1
+		pad: 0
+		stride: 1
+		bias_term: false
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2c"
+	top: "bottleneck_branch2c"
+	name: "bn1a_branch2c"
+	type: "BatchNorm"
+	batch_norm_param {
+		use_global_stats: true
+	}
+}
+
+layer {
+	bottom: "bottleneck_branch2c"
+	top: "bottleneck_branch2c"
+	name: "scale1a_branch2c"
+	type: "Scale"
+	scale_param {
+		bias_term: true
+	}
+}
+
+layer {
+	bottom: "P3"
+	bottom: "bottleneck_branch2c"
+	top: "bottleneck"
+	name: "bottleneck"
+	type: "Eltwise"
+}
+
+layer {
+	bottom: "bottleneck"
+	top: "bottleneck"
+	name: "bottleneck_relu"
+	type: "ReLU"
+}
+
+
+
+layer {
+    name: "bottleneck3upP3"
+	type: "Deconvolution"
+    bottom: "bottleneck"
+	top: "bottleneck3upP3"
+
+    convolution_param {
+    kernel_h : 8
+    kernel_w : 8
+    stride_h: 4
+    stride_w: 4
+    pad_h: 2
+    pad_w: 2
+    num_output: 256
+    group: 256
+    bias_term: false
+     weight_filler {
+      type: "bilinear"
+    }
+  }
+  param { lr_mult: 0 decay_mult: 0 }
+
+}
